@@ -1,6 +1,6 @@
-# Intel BID Library Builder for Raspberry Pi Pico 2
+# Intel Decimal Floating-Point Math Library Builder for Raspberry Pi Pico 2
 
-This directory contains a script for building the Intel Binary Integer Decimal (BID) library specifically optimized for the Raspberry Pi Pico 2 (RP2350) microcontroller.
+This directory contains a script for building the Intel Decimal Floating-Point Math Library (RDFP) specifically optimized for the Raspberry Pi Pico 2 (RP2350) microcontroller.
 
 ## License
 
@@ -10,7 +10,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Overview
 
-The Intel BID library provides high-precision decimal floating-point arithmetic operations that are essential for calculator applications and financial computations where binary floating-point precision is insufficient.
+The Intel Decimal Floating-Point Math Library (RDFP) provides high-precision decimal floating-point arithmetic operations that are essential for calculator applications and financial computations where binary floating-point precision is insufficient.
 
 ## Target Platform
 
@@ -28,7 +28,7 @@ Install the ARM GNU Embedded Toolchain:
 sudo apt install gcc-arm-none-eabi
 ```
 
-### Intel BID Library Source
+### Intel Decimal Floating-Point Math Library Source
 Download and extract the Intel RDFP Math Library:
 
 1. Download `IntelRDFPMathLib20U2.tar.gz` from Intel
@@ -39,7 +39,7 @@ Download and extract the Intel RDFP Math Library:
 
 The directory structure should be:
 ```
-intel-bid-pico2/
+intel-decimal-floating-point-pico2/
 ├── build.sh
 ├── README.md
 ├── IntelRDFPMathLib20U2/
@@ -61,7 +61,7 @@ intel-bid-pico2/
 The build script implements a comprehensive memory optimization strategy:
 
 #### 1. **Automated Source Code Patching**
-Before compilation, the script automatically patches Intel BID source files:
+Before compilation, the script automatically patches Intel RDFP source files:
 - **Target Files**: Trigonometric, exponential, and mathematical function files
 - **Patch Process**: Converts `static` arrays to `static const` arrays
 - **Backup Creation**: Original files preserved with `.backup` extension
@@ -105,7 +105,7 @@ The build script uses the following optimized settings for Pi Pico 2:
 ## Output
 
 The build process generates:
-- `gcc111libbid_pico2.a`: Optimized Intel BID library for Pi Pico 2 (6.6MB)
+- `gcc111libdecimal_pico2.a`: Optimized Intel Decimal Floating-Point Math Library for Pi Pico 2 (6.6MB)
 
 ### Memory Optimization Results (Verified)
 - ** ROM Placement Success**: Large lookup tables moved to Flash ROM
@@ -150,14 +150,14 @@ The built library provides comprehensive decimal floating-point support:
 
 To use the library in your Pi Pico 2 project:
 
-1. Copy `gcc111libbid_pico2.a` to your project's library directory
-2. Include the BID headers in your source:
+1. Copy `gcc111libdecimal_pico2.a` to your project's library directory
+2. Include the RDFP headers in your source:
    ```c
    #include "bid_functions.h"
    ```
 3. Link against the library:
    ```cmake
-   target_link_libraries(your_target gcc111libbid_pico2.a)
+   target_link_libraries(your_target gcc111libdecimal_pico2.a)
    ```
 
 ## Example Usage

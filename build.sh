@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Intel BID Library Builder for Raspberry Pi Pico 2 (RP2350)
-# This script builds the Intel Binary Integer Decimal (BID) library
+# Intel Decimal Floating-Point Math Library Builder for Raspberry Pi Pico 2 (RP2350)
+# This script builds the Intel Decimal Floating-Point Math Library (RDFP)
 # specifically optimized for the Pi Pico 2's Cortex-M33 processor.
 #
 # Memory Optimization Features:
@@ -16,7 +16,7 @@ set -e
 # Configuration
 PICO2_FLAGS="-mthumb -march=armv8-m.main+fp+dsp -mfloat-abi=softfp -mfpu=fpv5-sp-d16 -mcmse -DARM -DPICO2 -DBID_THREAD= -fdata-sections -ffunction-sections"
 BUILD_DIR="build"
-OUTPUT_LIB="gcc111libbid_pico2.a"
+OUTPUT_LIB="gcc111libdecimal_pico2.a"
 INTEL_LIB_VERSION="IntelRDFPMathLib20U2"
 
 # Check for ARM toolchain
@@ -26,7 +26,7 @@ if ! which arm-none-eabi-gcc > /dev/null 2>&1; then
     exit 1
 fi
 
-echo "=== Intel BID Library Builder for Pi Pico 2 ==="
+echo "=== Intel Decimal Floating-Point Math Library Builder for Pi Pico 2 ==="
 echo "Target: Raspberry Pi Pico 2 (RP2350 Cortex-M33)"
 echo "Compiler: $(arm-none-eabi-gcc --version | head -1)"
 echo "Flags: $PICO2_FLAGS"
@@ -38,15 +38,15 @@ cd "$BUILD_DIR"
 
 # Check if Intel library source exists
 if [ ! -d "../$INTEL_LIB_VERSION" ]; then
-    echo "Error: Intel BID library source not found!"
+    echo "Error: Intel Decimal Floating-Point Math Library source not found!"
     echo "Please extract $INTEL_LIB_VERSION.tar.gz to the project root directory."
     echo "Expected location: ../$INTEL_LIB_VERSION"
     exit 1
 fi
 
-# Copy Intel BID library sources
+# Copy Intel RDFP library sources
 if [ ! -d "$INTEL_LIB_VERSION" ]; then
-    echo "Copying Intel BID library sources..."
+    echo "Copying Intel Decimal Floating-Point Math Library sources..."
     cp -r "../$INTEL_LIB_VERSION" .
 fi
 
@@ -103,7 +103,7 @@ find src -name "*.c" -exec grep -l "static.*\[\]" {} \; | while read file; do
     fi
 done
 
-echo "Building Intel BID library for Pi Pico 2..."
+echo "Building Intel Decimal Floating-Point Math Library for Pi Pico 2..."
 echo "This may take several minutes..."
 echo
 
@@ -136,7 +136,7 @@ if [ -f "libbid.a" ]; then
     echo
     echo
     echo "Library ready for use with Pi Pico 2 projects!"
-    echo "Link with: -L. -lbid or add gcc111libbid_pico2.a to your project"
+    echo "Link with: -L. -ldecimal or add gcc111libdecimal_pico2.a to your project"
 else
     echo "Error: Build failed - libbid.a not found"
     exit 1
