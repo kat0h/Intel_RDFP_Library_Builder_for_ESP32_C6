@@ -161,7 +161,7 @@ To use the library in your Pi Pico 2 project:
    ```
 
 ## Example Usage
-See this [repository]().
+See this [repository](https://github.com/ice458/Intel_RDFP_Library_Example_for_RPi_Pico2).
 
 ## License
 
