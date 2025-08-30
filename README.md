@@ -1,3 +1,26 @@
+# ESP32 C6版
+
+必須
+https://github.com/pioarduino/platform-espressif32#develop
+
+esp32-c6-wroom-1で動作することを確認
+
+コケたこと
+
+↓この辺をつけないと、型が合わずにビルドがコケる
+
+- -DDECIMAL_CALL_BY_REFERENCE=1
+- -DDECIMAL_GLOBAL_ROUNDING=1
+- -DDECIMAL_GLOBAL_EXCEPTION_FLAGS=1
+- -DBID_THREAD=
+
+testprjのビルド方法
+
+生成された.aファイルをtestprj/libbidとして配置する
+
+$ pio run
+
+
 # Intel Decimal Floating-Point Math Library Builder for Raspberry Pi Pico 2
 
 This directory contains a script for building the Intel Decimal Floating-Point Math Library (RDFP) specifically optimized for the Raspberry Pi Pico 2 (RP2350) microcontroller.

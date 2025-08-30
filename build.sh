@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Intel Decimal Floating-Point Math Library Builder for Raspberry Pi Pico 2 (RP2350)
+# Intel Decimal Floating-Point Math Library Builder for esp32-c6-wroom-1
 # This script builds the Intel Decimal Floating-Point Math Library (RDFP)
-# specifically optimized for the Pi Pico 2's Cortex-M33 processor.
 #
 # Memory Optimization Features:
 # - Source code patches: static arrays → static const arrays for ROM placement
@@ -14,22 +13,25 @@
 set -e
 
 # Configuration
-PICO2_FLAGS="-mthumb -march=armv8-m.main+fp+dsp -mfloat-abi=softfp -mfpu=fpv5-sp-d16 -mcmse -DARM -DPICO2 -DBID_THREAD= -fdata-sections -ffunction-sections"
+C6_FLAGS="-Os -fdata-sections -ffunction-sections -DBID_THREAD="
 BUILD_DIR="build"
-OUTPUT_LIB="gcc111libdecimal_pico2.a"
+OUTPUT_LIB="gcc111libdecimal_esp32_c6.a"
 INTEL_LIB_VERSION="IntelRDFPMathLib20U2"
 
+# use toolchains installed by platformio
+# https://github.com/pioarduino/platform-espressif32#develop
+CC=~/.platformio/tools/toolchain-riscv32-esp/bin/riscv32-esp-elf-gcc
+
 # Check for ARM toolchain
-if ! which arm-none-eabi-gcc > /dev/null 2>&1; then
-    echo "Error: ARM toolchain not found. Please install arm-none-eabi-gcc"
-    echo "On Ubuntu/Debian: sudo apt install gcc-arm-none-eabi"
+if ! which $CC > /dev/null 2>&1; then
+    echo "Error: ESP toolchain not found."
+	echo "$CC"
     exit 1
 fi
 
-echo "=== Intel Decimal Floating-Point Math Library Builder for Pi Pico 2 ==="
-echo "Target: Raspberry Pi Pico 2 (RP2350 Cortex-M33)"
-echo "Compiler: $(arm-none-eabi-gcc --version | head -1)"
-echo "Flags: $PICO2_FLAGS"
+echo "=== Intel Decimal Floating-Point Math Library Builder for ESP32 C6 ==="
+echo "Compiler: $($CC --version | head -1)"
+echo "Flags: $C6_FLAGS"
 echo
 
 # Create build directory
@@ -111,11 +113,11 @@ echo
 make clean > /dev/null 2>&1 || true
 
 # Build the library with Pi Pico 2 specific settings
-make \
-  CC="arm-none-eabi-gcc $PICO2_FLAGS" \
+make -j \
+  CC="$CC $C6_FLAGS" \
   CC_NAME=gcc \
-  AR="arm-none-eabi-ar" \
-  AR_CMD="arm-none-eabi-ar rv" \
+  AR="~/.platformio/tools/toolchain-riscv32-esp/bin/riscv32-esp-elf-ar" \
+  AR_CMD="~/.platformio/tools/toolchain-riscv32-esp/bin/riscv32-esp-elf-ar rv" \
   CALL_BY_REF=1 \
   GLOBAL_RND=1 \
   GLOBAL_FLAGS=1 \
@@ -135,8 +137,8 @@ if [ -f "libbid.a" ]; then
     echo "Architecture: $(arm-none-eabi-objdump -f ../../$OUTPUT_LIB | grep architecture | head -1)"
     echo
     echo
-    echo "Library ready for use with Pi Pico 2 projects!"
-    echo "Link with: -L. -ldecimal or add gcc111libdecimal_pico2.a to your project"
+    echo "Library ready for use with ESP32 C6"
+    echo "Link with: -L. -ldecimal or add $OUTPUT_LIB to your project"
 else
     echo "Error: Build failed - libbid.a not found"
     exit 1
